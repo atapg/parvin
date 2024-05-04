@@ -1,6 +1,5 @@
 const testElement = Parvin.createElement('div', {}, [
     Parvin.createElement('h1', {}, ['testtt']),
-    Parvin.createElement('button', {}, ['Click me']),
 ])
 
 const myComponent = Parvin.createComponent(
@@ -8,11 +7,14 @@ const myComponent = Parvin.createComponent(
     'button',
     {
         class: 'btn test nice',
-        style: 'background: red;',
+        style: 'background: blue; padding: 20px; cursor: pointer;',
     },
     ['Click my component button'],
 )
 
 testElement.appendChild(myComponent)
+myComponent.addEvent('click', () => {
+    alert('Hello!')
+})
 
 Parvin.render(testElement, document.getElementById('app'))

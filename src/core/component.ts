@@ -5,8 +5,8 @@ class Component extends Element {
 
     constructor(
         name: string,
-        tag: string,
-        attributes = {},
+        tag: keyof HTMLElementTagNameMap,
+        attributes: Record<string, string> = {},
         children: Array<Element> = [],
     ) {
         super(tag, attributes, children)
@@ -23,11 +23,6 @@ class Component extends Element {
     render() {
         const element = super.render()
 
-        // Add custom behavior or event listeners to the rendered component
-        element.addEventListener('click', () => {
-            console.log('Component clicked!')
-        })
-
         return element
     }
 }
@@ -35,9 +30,9 @@ class Component extends Element {
 // Helper function for creating component
 function createComponent(
     name: string,
-    tag: string,
-    attributes = {},
-    children = [],
+    tag: keyof HTMLElementTagNameMap,
+    attributes: Record<string, string> = {},
+    children: Array<Element> = [],
 ) {
     return new Component(name, tag, attributes, children)
 }

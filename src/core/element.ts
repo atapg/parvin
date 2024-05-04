@@ -1,17 +1,23 @@
 import { generateToken } from './utils/helpers'
 
 class Element {
-    tag
-    attributes
-    children
-    parent: null | Element
-    token
+    tag: keyof HTMLElementTagNameMap
+    attributes: Record<string, string>
+    children: Element[]
+    parent: Element | null
+    token: string
+    element: HTMLElement
 
-    constructor(tag: string, attributes = {}, children: Array<Element> = []) {
+    constructor(
+        tag: keyof HTMLElementTagNameMap,
+        attributes: Record<string, string> = {},
+        children: Array<Element> = [],
+    ) {
         this.tag = tag
         this.attributes = attributes
         this.children = children
         this.parent = null
+        this.element = document.createElement(tag)
 
         // For future use
         this.token = generateToken()
@@ -23,33 +29,51 @@ class Element {
         this.children.push(child)
     }
 
+    addEvent(
+        eventType: string,
+        listener: EventListenerOrEventListenerObject,
+        options?: boolean | AddEventListenerOptions,
+    ) {
+        this.element.addEventListener(eventType, listener, options)
+    }
+
+    removeEvent(
+        eventType: string,
+        listener: EventListenerOrEventListenerObject,
+        options?: boolean | EventListenerOptions,
+    ) {
+        this.element.removeEventListener(eventType, listener, options)
+    }
+
     // Recursive render function to show elements in the DOM
     render() {
-        const element = document.createElement(this.tag)
-
         for (const [key, value] of Object.entries(this.attributes)) {
             // @ts-ignore
-            element.setAttribute(key, value)
+            this.element.setAttribute(key, value)
         }
 
         // Set parvin id
-        element.setAttribute('parvin_token', this.token)
+        this.element.setAttribute('parvin_token', this.token)
 
         this.children.forEach((child) => {
             if (child instanceof Element) {
                 const childElement = child.render()
-                element.appendChild(childElement)
+                this.element.appendChild(childElement)
             } else {
-                element.appendChild(document.createTextNode(child))
+                this.element.appendChild(document.createTextNode(child))
             }
         })
 
-        return element
+        return this.element
     }
 }
 
 // Helper function
-function createElement(tag: string, attributes = {}, children = []) {
+function createElement(
+    tag: keyof HTMLElementTagNameMap,
+    attributes = {},
+    children = [],
+) {
     const element = new Element(tag, attributes, children)
 
     return element
