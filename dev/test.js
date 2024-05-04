@@ -9,7 +9,7 @@ const myComponent = Parvin.createComponent(
         class: 'btn test nice',
         style: 'background: blue; padding: 20px; cursor: pointer;',
     },
-    ['Click my component button'],
+    `<p>Hello!!</p>`,
 )
 
 testElement.appendChild(myComponent)

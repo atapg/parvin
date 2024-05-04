@@ -2,7 +2,7 @@ import { generateToken } from './utils/helpers'
 
 class Element {
     tag: keyof HTMLElementTagNameMap
-    attributes: Record<string, string>
+    props: Record<string, string>
     children: Element[]
     parent: Element | null
     token: string
@@ -10,11 +10,11 @@ class Element {
 
     constructor(
         tag: keyof HTMLElementTagNameMap,
-        attributes: Record<string, string> = {},
+        props: Record<string, string> = {},
         children: Array<Element> = [],
     ) {
         this.tag = tag
-        this.attributes = attributes
+        this.props = props
         this.children = children
         this.parent = null
         this.element = document.createElement(tag)
@@ -47,7 +47,7 @@ class Element {
 
     // Recursive render function to show elements in the DOM
     render() {
-        for (const [key, value] of Object.entries(this.attributes)) {
+        for (const [key, value] of Object.entries(this.props)) {
             // @ts-ignore
             this.element.setAttribute(key, value)
         }
