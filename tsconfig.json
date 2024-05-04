@@ -13,6 +13,8 @@
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "noEmit": false,
+    "noImplicitThis":false,
+
     // Best practices
     "strict": true,
     "skipLibCheck": true,
