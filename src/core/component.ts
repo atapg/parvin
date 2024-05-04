@@ -1,6 +1,10 @@
 import { Element } from './element'
 import { parser } from './parser'
-import { renderTemplate } from './renderer'
+import {
+    renderElements,
+    renderTemplateEvents,
+    renderTemplateStates,
+} from './renderer'
 import { State } from './state'
 
 class Component extends Element {
@@ -8,6 +12,7 @@ class Component extends Element {
     template
     script
     state: State | null
+    methods: Object | undefined
 
     constructor(
         name: string,
@@ -21,22 +26,19 @@ class Component extends Element {
         // Parse data and seperate template and scripts
         const data = parser(template)
         this.template = data?.template
+
         this.script = data?.script
 
         this.state = this.script?.state ? new State(this.script.state) : null
+        this.methods = this.script.methods
     }
 
     onStateUpdate(newState: Record<string, any>) {
         if (this.state) {
             // this.state.update(newState)
             this.render()
+            this.onUpdated()
         }
-    }
-
-    // Update data method
-    updateData(newData: Record<string, any>) {
-        Object.assign(this.props, newData)
-        this.render()
     }
 
     // Lifecycle methods
@@ -71,10 +73,17 @@ class Component extends Element {
         const element = super.render()
 
         if (this.template) {
-            element.innerHTML = renderTemplate(
+            const renderedStates = renderTemplateStates(
                 this.template,
                 this.state ? this.state.data : {},
             )
+
+            const elements = renderElements(renderedStates, this.methods)
+
+            // element.innerHTML = renderedStates
+            if (elements) {
+                element.appendChild(elements.render())
+            }
         }
 
         this.onMounted()

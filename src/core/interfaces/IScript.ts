@@ -4,4 +4,5 @@ export default interface IScript {
     onMounted?: Function
     onUpdated?: Function
     onDestroyed?: Function
+    methods?: Object
 }

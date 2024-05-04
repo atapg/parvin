@@ -13,6 +13,10 @@ const myComponent = Parvin.createComponent(
     <div>
         <p>Hello World!</p>
         <p> $$count </p>
+        <button @click="clickHandler">Click</button>
+        <div>
+            <p>test nested</p>
+        </div>
     </div>
 </template>
 
@@ -22,13 +26,18 @@ const myComponent = Parvin.createComponent(
         count: 1
     },
     onCreated: function(){
-        console.log("component created")
+        // console.log("component created")
     },
     onDestroyed: function(){},
     onUpdated: function(){},
     onMounted: function(){
-        console.log("component mounted huraa")
+        // console.log("component mounted huraa")
     },
+    methods:{
+        clickHandler: function(){
+            console.log("Clicked button")
+        }
+    }
 }
 </script>`,
 )

@@ -6,7 +6,8 @@ class Element {
     children: Element[]
     parent: Element | null
     token: string
-    element: HTMLElement
+    DOMElement: HTMLElement
+    element: Element
 
     constructor(
         tag: keyof HTMLElementTagNameMap,
@@ -16,8 +17,9 @@ class Element {
         this.tag = tag
         this.props = props
         this.children = children
+        this.element = this
         this.parent = null
-        this.element = document.createElement(tag)
+        this.DOMElement = document.createElement(tag)
 
         // For future use
         this.token = generateToken()
@@ -34,7 +36,7 @@ class Element {
         listener: EventListenerOrEventListenerObject,
         options?: boolean | AddEventListenerOptions,
     ) {
-        this.element.addEventListener(eventType, listener, options)
+        this.DOMElement.addEventListener(eventType, listener, options)
     }
 
     removeEvent(
@@ -42,29 +44,33 @@ class Element {
         listener: EventListenerOrEventListenerObject,
         options?: boolean | EventListenerOptions,
     ) {
-        this.element.removeEventListener(eventType, listener, options)
+        this.DOMElement.removeEventListener(eventType, listener, options)
+    }
+
+    getElementInstance() {
+        return this
     }
 
     // Recursive render function to show elements in the DOM
     render() {
         for (const [key, value] of Object.entries(this.props)) {
             // @ts-ignore
-            this.element.setAttribute(key, value)
+            this.DOMElement.setAttribute(key, value)
         }
 
         // Set parvin id
-        this.element.setAttribute('parvin_token', this.token)
+        this.DOMElement.setAttribute('parvin_token', this.token)
 
         this.children.forEach((child) => {
             if (child instanceof Element) {
                 const childElement = child.render()
-                this.element.appendChild(childElement)
+                this.DOMElement.appendChild(childElement)
             } else {
-                this.element.appendChild(document.createTextNode(child))
+                this.DOMElement.appendChild(document.createTextNode(child))
             }
         })
 
-        return this.element
+        return this.DOMElement
     }
 }
 

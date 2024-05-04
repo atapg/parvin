@@ -2,6 +2,7 @@
     <div>
         <p>Hello World!</p>
         <p> $$count </p>
+        <button @click="clickHandler">Click</button>
     </div>
 </template>
 
@@ -18,5 +19,10 @@
     onMounted: function(){
         console.log("component mounted huraa")
     },
+    methods:{
+        const clickHandler = () => {
+            console.log("Clicked button")
+        }
+    }
 }
 </script>
