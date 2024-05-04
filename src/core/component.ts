@@ -1,5 +1,5 @@
 import { Element } from './element'
-import { parser } from './parser'
+import { elementParser, parser } from './parser'
 import {
     renderElements,
     renderTemplateEvents,
@@ -78,9 +78,8 @@ class Component extends Element {
                 this.state ? this.state.data : {},
             )
 
-            const elements = renderElements(renderedStates, this.methods)
+            const elements = elementParser(renderedStates, this.methods)
 
-            // element.innerHTML = renderedStates
             if (elements) {
                 element.appendChild(elements.render())
             }

@@ -15,7 +15,10 @@ const myComponent = Parvin.createComponent(
         <p> $$count </p>
         <button @click="clickHandler">Click</button>
         <div>
-            <p>test nested</p>
+            <p>
+                test   nested   
+                <span>Another one</span>    
+            </p>
         </div>
     </div>
 </template>

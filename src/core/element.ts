@@ -26,8 +26,12 @@ class Element {
     }
 
     // Appending child to the element
-    appendChild(child: Element) {
-        child.parent = this
+    appendChild(child: Element | string) {
+        if (child instanceof Element) {
+            child.parent = this
+        }
+
+        // @ts-ignore
         this.children.push(child)
     }
 
