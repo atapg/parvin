@@ -9,7 +9,27 @@ const myComponent = Parvin.createComponent(
         class: 'btn test nice',
         style: 'background: blue; padding: 20px; cursor: pointer;',
     },
-    `<p>Hello!!</p>`,
+    `<template>
+    <div>
+        <p>Hello World!</p>
+    </div>
+</template>
+
+<script>
+{
+    states:{
+        count: 1
+    },
+    onCreated: function(){
+        console.log("component created")
+    },
+    onDestroyed: function(){},
+    onUpdated: function(){},
+    onMounted: function(){
+        console.log("component mounted huraa")
+    },
+}
+</script>`,
 )
 
 testElement.appendChild(myComponent)

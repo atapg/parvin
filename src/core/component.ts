@@ -1,8 +1,10 @@
 import { Element } from './element'
+import { parser } from './parser'
 
 class Component extends Element {
     name
     template
+    script
 
     constructor(
         name: string,
@@ -12,7 +14,13 @@ class Component extends Element {
     ) {
         super(tag, props, [])
         this.name = name
-        this.template = template
+        this.template = parser(template)?.template
+        this.script = parser(template)?.script
+        this.setBindings()
+    }
+
+    setBindings() {
+        // console.log()
     }
 
     // Update data method
@@ -23,19 +31,27 @@ class Component extends Element {
 
     // Lifecycle methods
     onCreate() {
-        console.log(`Component ${this.name} created`)
+        if (this.script?.onCreated) {
+            this.script?.onCreated()
+        }
     }
 
     onMount() {
-        console.log(`Component ${this.name} mounted`)
+        if (this.script?.onMounted) {
+            this.script?.onMounted()
+        }
     }
 
     onDestroy() {
-        console.log(`Component ${this.name} destroyed`)
+        if (this.script?.onDestroyed) {
+            this.script?.onDestroyed()
+        }
     }
 
     onUpdate() {
-        console.log(`Component ${this.name} updated`)
+        if (this.script?.onUpdated) {
+            this.script?.onUpdated()
+        }
     }
 
     // Override render method for custom component rendering
@@ -43,7 +59,10 @@ class Component extends Element {
         this.onCreate()
 
         const element = super.render()
-        element.innerHTML = this.template
+
+        if (this.template) {
+            element.innerHTML = this.template
+        }
 
         this.onMount()
 
