@@ -12,12 +12,13 @@ const myComponent = Parvin.createComponent(
     `<template>
     <div>
         <p>Hello World!</p>
+        <p> $$count </p>
     </div>
 </template>
 
 <script>
 {
-    states:{
+    state: {
         count: 1
     },
     onCreated: function(){

@@ -1,10 +1,13 @@
 import { Element } from './element'
 import { parser } from './parser'
+import { renderTemplate } from './renderer'
+import { State } from './state'
 
 class Component extends Element {
     name
     template
     script
+    state: State | null
 
     constructor(
         name: string,
@@ -14,13 +17,20 @@ class Component extends Element {
     ) {
         super(tag, props, [])
         this.name = name
-        this.template = parser(template)?.template
-        this.script = parser(template)?.script
-        this.setBindings()
+
+        // Parse data and seperate template and scripts
+        const data = parser(template)
+        this.template = data?.template
+        this.script = data?.script
+
+        this.state = this.script?.state ? new State(this.script.state) : null
     }
 
-    setBindings() {
-        // console.log()
+    onStateUpdate(newState: Record<string, any>) {
+        if (this.state) {
+            // this.state.update(newState)
+            this.render()
+        }
     }
 
     // Update data method
@@ -30,25 +40,25 @@ class Component extends Element {
     }
 
     // Lifecycle methods
-    onCreate() {
+    onCreated() {
         if (this.script?.onCreated) {
             this.script?.onCreated()
         }
     }
 
-    onMount() {
+    onMounted() {
         if (this.script?.onMounted) {
             this.script?.onMounted()
         }
     }
 
-    onDestroy() {
+    onDestroyed() {
         if (this.script?.onDestroyed) {
             this.script?.onDestroyed()
         }
     }
 
-    onUpdate() {
+    onUpdated() {
         if (this.script?.onUpdated) {
             this.script?.onUpdated()
         }
@@ -56,15 +66,18 @@ class Component extends Element {
 
     // Override render method for custom component rendering
     render() {
-        this.onCreate()
+        this.onCreated()
 
         const element = super.render()
 
         if (this.template) {
-            element.innerHTML = this.template
+            element.innerHTML = renderTemplate(
+                this.template,
+                this.state ? this.state.data : {},
+            )
         }
 
-        this.onMount()
+        this.onMounted()
 
         return element
     }
