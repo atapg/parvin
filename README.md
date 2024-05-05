@@ -12,7 +12,7 @@ This project created for educational purpose :)
 
 • State management: Handling state changing and rerendering components.
 
-• Vue like syntax (custom syntax and parser)
+• Vue-like syntax (custom syntax and parser)
 
 • Lifecycle methods, watchers for tracking state changes, event binding
 
@@ -146,8 +146,8 @@ Congrats! you now created your first component!
 
 • Reactive states must be in state property.
 
-• Watchers' name should be the same as reactive states name.
+• Watchers' name should be the same as the reactive state name.
 
-• Methods should be declared inside methods object.
+• Methods should be declared inside the methods object.
 
 • There are 4 lifecycle methods named: onCreated, onMounted, onUpdated, onDestroyed.
