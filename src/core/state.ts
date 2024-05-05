@@ -1,31 +1,28 @@
-class State {
-    data: Record<string, any>
-    listeners: Record<string, Function[]>
+import type { Component } from './component'
 
-    constructor(data: Record<string, any>) {
-        this.data = data
+class State {
+    state: Record<string, any>
+    listeners: Record<string, Function[]>
+    component: Component
+    handler: Object = {}
+
+    constructor(data: Record<string, any>, component: Component) {
+        this.handler = {
+            set: this.set.bind(this),
+        }
+        this.state = new Proxy({ ...data }, this.handler)
+        this.component = component
         this.listeners = {}
     }
 
-    // Getter to access data properties
-    get(key: string) {
-        return this.data[key]
+    set(target: any, property: any, newValue: any) {
+        target[property] = newValue
+
+        this.component.onStateUpdate()
     }
 
-    // Setter to update data properties and trigger listeners
-    set(key: string, value: any) {
-        this.data[key] = value
-        if (this.listeners[key]) {
-            this.listeners[key].forEach((listener) => listener(value))
-        }
-    }
-
-    // Method to subscribe to data changes
-    subscribe(key: string, listener: Function) {
-        if (!this.listeners[key]) {
-            this.listeners[key] = []
-        }
-        this.listeners[key].push(listener)
+    setComponent(component: Component) {
+        this.component = component
     }
 }
 

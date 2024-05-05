@@ -13,6 +13,8 @@ class Component extends Element {
     script
     state: State | null
     methods: Object | undefined
+    object: Object
+    declare DOMElement: HTMLElement
 
     constructor(
         name: string,
@@ -21,6 +23,7 @@ class Component extends Element {
         template: string = '',
     ) {
         super(tag, props, [])
+
         this.name = name
 
         // Parse data and seperate template and scripts
@@ -29,14 +32,17 @@ class Component extends Element {
 
         this.script = data?.script
 
-        this.state = this.script?.state ? new State(this.script.state) : null
-        this.methods = this.script.methods
+        this.state = new State(this.script.state ? this.script.state : {}, this)
+        this.methods = this.script?.methods
+
+        // @ts-ignore
+        this.object = { ...this.methods, ...this.state }
     }
 
-    onStateUpdate(newState: Record<string, any>) {
+    onStateUpdate() {
         if (this.state) {
             // this.state.update(newState)
-            this.render()
+            this.rerender()
             this.onUpdated()
         }
     }
@@ -66,28 +72,33 @@ class Component extends Element {
         }
     }
 
+    rerender() {
+        super.rerender()
+    }
+
     // Override render method for custom component rendering
     render() {
         this.onCreated()
 
-        const element = super.render()
+        this.DOMElement = super.render()
 
         if (this.template) {
             const renderedStates = renderTemplateStates(
                 this.template,
-                this.state ? this.state.data : {},
+                this.state ? this.state.state : {},
             )
 
-            const elements = elementParser(renderedStates, this.methods)
+            // @ts-ignore
+            const elements = elementParser(renderedStates, this.object)
 
             if (elements) {
-                element.appendChild(elements.render())
+                this.DOMElement.appendChild(elements.render())
             }
         }
 
         this.onMounted()
 
-        return element
+        return this.DOMElement
     }
 }
 

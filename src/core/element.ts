@@ -6,7 +6,7 @@ class Element {
     children: Element[]
     parent: Element | null
     token: string
-    DOMElement: HTMLElement
+    declare DOMElement: HTMLElement
     element: Element
 
     constructor(
@@ -19,7 +19,7 @@ class Element {
         this.children = children
         this.element = this
         this.parent = null
-        this.DOMElement = document.createElement(tag)
+        this.DOMElement = document.createElement(this.tag)
 
         // For future use
         this.token = generateToken()
@@ -53,6 +53,15 @@ class Element {
 
     getElementInstance() {
         return this
+    }
+
+    rerender() {
+        if (this.DOMElement) {
+            const oldElement = this.DOMElement
+            this.DOMElement = document.createElement(this.tag)
+            this.render()
+            oldElement.replaceWith(this.DOMElement)
+        }
     }
 
     // Recursive render function to show elements in the DOM

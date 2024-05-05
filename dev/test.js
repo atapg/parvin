@@ -4,17 +4,19 @@ const testElement = Parvin.createElement('div', {}, [
 
 const myComponent = Parvin.createComponent(
     'MY Button',
-    'button',
+    'div',
     {
         class: 'btn test nice',
-        style: 'background: blue; padding: 20px; cursor: pointer;',
     },
     `<template>
     <div>
         test
         <p>Hello World!</p>
         <p> $$count </p>
-        <button @click="clickHandler" @update="clickHandler">
+        <button @click="clickHandler">
+            <span>Click</span>
+        </button>
+        <button @click="testAlert">
             <span>Click</span>
         </button>
         <div>
@@ -39,9 +41,14 @@ const myComponent = Parvin.createComponent(
     onMounted: function(){
         // console.log("component mounted huraa")
     }, 
-    methods:{
+    methods: {
         clickHandler: function(){
             console.log("Clicked button")
+        },
+        testAlert:function(){
+            // alert("NICEEEEE")
+            this.state.count++
+            console.log(this.state.count)
         }
     }
 }
