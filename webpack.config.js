@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename)
 export default {
     entry: './src/app.ts',
     output: {
-        filename: 'bundle.js',
+        filename: 'parvin.js',
         path: path.resolve(__dirname, 'dist'),
     },
     module: {

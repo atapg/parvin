@@ -13,11 +13,11 @@ const myComponent = Parvin.createComponent(
         test
         <p>Hello World!</p>
         <p> $$count </p>
-        <button @click="clickHandler">
-            <span>Click</span>
+        <button @click="decrease">
+            Decrease
         </button>
-        <button @click="testAlert">
-            <span>Click</span>
+        <button @click="increase">
+            Increase
         </button>
         <div>
             <p>
@@ -36,7 +36,9 @@ const myComponent = Parvin.createComponent(
     onCreated: function(){
         // console.log("component created")
     },
-    onDestroyed: function(){},
+    onDestroyed: function(){
+        // console.log("component destroyed")
+    },
     onUpdated: function(){
         // console.log("component updated")
     },
@@ -44,8 +46,11 @@ const myComponent = Parvin.createComponent(
         // console.log("component mounted")
     }, 
     methods: {
-        clickHandler: function(){
-            console.log("Clicked button")
+        increase: function(type){
+            this.state.count++
+        },
+        decrease: function(type){
+            this.state.count--
         },
         testAlert:function(){
             // alert("NICEEEEE")
