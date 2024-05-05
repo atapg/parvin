@@ -5,4 +5,5 @@ export default interface IScript {
     onUpdated?: Function
     onDestroyed?: Function
     methods?: Object
+    watchers?: Object
 }

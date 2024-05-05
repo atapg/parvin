@@ -13,6 +13,7 @@ class Component extends Element {
     script
     state: State | null
     methods: Object | undefined
+    watchers: Object | undefined
     object: Object
     declare DOMElement: HTMLElement
 
@@ -34,16 +35,22 @@ class Component extends Element {
 
         this.state = new State(this.script.state ? this.script.state : {}, this)
         this.methods = this.script?.methods
+        this.watchers = this.script?.watchers
 
         // @ts-ignore
         this.object = { ...this.methods, ...this.state }
     }
 
-    onStateUpdate() {
+    onStateUpdate(oldValue: any, newValue: any, property: any) {
         if (this.state) {
             // this.state.update(newState)
             this.rerender()
-            this.onUpdated()
+
+            // @ts-ignore
+            if (this.watchers[property]) {
+                // @ts-ignore
+                this.watchers[property](oldValue, newValue, property)
+            }
         }
     }
 
@@ -74,6 +81,12 @@ class Component extends Element {
 
     rerender() {
         super.rerender()
+        this.onUpdated()
+    }
+
+    destroy(): void {
+        super.destroy()
+        this.onDestroyed()
     }
 
     // Override render method for custom component rendering

@@ -64,6 +64,10 @@ class Element {
         }
     }
 
+    destroy() {
+        this.DOMElement.remove()
+    }
+
     // Recursive render function to show elements in the DOM
     render() {
         for (const [key, value] of Object.entries(this.props)) {

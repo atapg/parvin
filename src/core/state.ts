@@ -16,9 +16,11 @@ class State {
     }
 
     set(target: any, property: any, newValue: any) {
+        const oldValue = target[property]
+
         target[property] = newValue
 
-        this.component.onStateUpdate()
+        this.component.onStateUpdate(oldValue, newValue, property)
     }
 
     setComponent(component: Component) {
