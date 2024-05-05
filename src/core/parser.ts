@@ -1,4 +1,4 @@
-import { createElement } from './element'
+import { createElement, Element } from './element'
 import type IParser from './interfaces/IParser'
 import type IScript from './interfaces/IScript'
 
@@ -26,6 +26,34 @@ const parser = (data: string): IParser => {
     }
 }
 
+const setEvents = (
+    element: Element,
+    events: Record<string, string | null>[],
+    methods: Object | undefined,
+) => {
+    events.forEach((event) => {
+        // @ts-ignore
+        element.addEvent(event.eventName, () => methods[event.eventFunction]())
+    })
+}
+
+const eventParser = (
+    node: HTMLElement,
+    element: Element,
+    methods: Object | undefined,
+) => {
+    const events: Record<string, string | null>[] = []
+    // console.log(node)
+    node.getAttributeNames().forEach((event) => {
+        events.push({
+            eventName: event.replace('@', ''),
+            eventFunction: node.getAttribute(event),
+        })
+    })
+
+    setEvents(element, events, methods)
+}
+
 const elementParser = (template: string, methods: Object | undefined) => {
     const events: any = {}
 
@@ -49,6 +77,7 @@ const elementParser = (template: string, methods: Object | undefined) => {
                     [],
                 )
 
+                eventParser(childNode, element, methods)
                 // @ts-ignore
                 parentElement.appendChild(element)
                 // instanceof Text
@@ -64,13 +93,6 @@ const elementParser = (template: string, methods: Object | undefined) => {
                     createChildElements(childNode.childNodes, element)
                 }
             }
-
-            // if (typeof childNode.data === 'string' && childNode.data) {
-            //     if (element) {
-            //         console.log(childNode.data)
-            //         element.appendChild(childNode.data)
-            //     }
-            // }
         }
     }
 
@@ -81,13 +103,16 @@ const elementParser = (template: string, methods: Object | undefined) => {
             {},
             [],
         )
-
-        // const appendChildToElement = (ele:)
+        eventParser(rootElement, element, methods)
+        // @ts-ignore
+        for (const cn of rootElement.childNodes) {
+            if (cn instanceof Text && cn.parentNode === rootElement) {
+                element.appendChild(cn.data)
+            }
+        }
 
         // @ts-ignore
         createChildElements(rootElement.childNodes, element)
-
-        // console.log({ rootElement })
 
         return element
     }

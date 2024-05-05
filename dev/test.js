@@ -11,9 +11,12 @@ const myComponent = Parvin.createComponent(
     },
     `<template>
     <div>
+        test
         <p>Hello World!</p>
         <p> $$count </p>
-        <button @click="clickHandler">Click</button>
+        <button @click="clickHandler" @update="clickHandler">
+            <span>Click</span>
+        </button>
         <div>
             <p>
                 test   nested   
@@ -35,7 +38,7 @@ const myComponent = Parvin.createComponent(
     onUpdated: function(){},
     onMounted: function(){
         // console.log("component mounted huraa")
-    },
+    }, 
     methods:{
         clickHandler: function(){
             console.log("Clicked button")
@@ -46,8 +49,8 @@ const myComponent = Parvin.createComponent(
 )
 
 testElement.appendChild(myComponent)
-myComponent.addEvent('click', () => {
-    alert('Hello!')
-})
+// myComponent.addEvent('click', () => {
+//     alert('Hello!')
+// })
 
 Parvin.render(testElement, document.getElementById('app'))
