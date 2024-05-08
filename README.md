@@ -77,10 +77,10 @@ const template = `
         test
         <p>Hello World!</p>
         <p> $$count </p>
-        <button @click="decrease">
+        <button $click="decrease">
             Decrease
         </button>
-        <button @click="increase">
+        <button $click="increase">
             Increase
         </button>
         <div>
