@@ -1,3 +1,4 @@
+import parvinConfig from './configs/general'
 import { createElement, type Element } from './element'
 import { getTemplateEvents, setTokens } from './utils/helpers'
 
@@ -13,9 +14,12 @@ function render(vDomElement: Element, container: HTMLElement) {
 
 // Set state value instead of $$variables in the template
 function renderTemplateStates(template: string, data: Record<string, any>) {
-    return template.replace(/\$\$([\w.]+)/g, (v, key) => {
-        return data[key]
-    })
+    return template.replace(
+        parvinConfig.templateVariableSyntaxRegex,
+        (v, key) => {
+            return data[key]
+        },
+    )
 }
 
 function renderTemplateEvents(template: string, methods: Object | undefined) {

@@ -14,7 +14,7 @@ class Component extends Element {
     state: State | null
     methods: Object | undefined
     watchers: Object | undefined
-    object: Object
+    globalObject: any
     declare DOMElement: HTMLElement
 
     constructor(
@@ -37,8 +37,7 @@ class Component extends Element {
         this.methods = this.script?.methods
         this.watchers = this.script?.watchers
 
-        // @ts-ignore
-        this.object = { ...this.methods, ...this.state }
+        this.globalObject = { ...this.methods, ...this.state }
     }
 
     onStateUpdate(oldValue: any, newValue: any, property: any) {
@@ -101,8 +100,7 @@ class Component extends Element {
                 this.state ? this.state.state : {},
             )
 
-            // @ts-ignore
-            const elements = elementParser(renderedStates, this.object)
+            const elements = elementParser(renderedStates, this.globalObject)
 
             if (elements) {
                 this.DOMElement.appendChild(elements.render())

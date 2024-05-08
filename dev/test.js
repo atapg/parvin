@@ -3,20 +3,19 @@ const testElement = Parvin.createElement('div', {}, [
 ])
 
 const myComponent = Parvin.createComponent(
-    'MY Button',
+    'MyComponent',
     'div',
-    {
-        class: 'btn test nice',
-    },
-    `<template>
-    <div>
+    {},
+    `
+<template>
+    <div class="center"  test="test">
         test
         <p>Hello World!</p>
         <p> $$count </p>
-        <button @click="decrease">
+        <button $click="decrease">
             Decrease
         </button>
-        <button @click="increase">
+        <button $click="increase">
             Increase
         </button>
         <div>
@@ -52,7 +51,7 @@ const myComponent = Parvin.createComponent(
         decrease: function(type){
             this.state.count--
         },
-        testAlert:function(){
+        testAlert: function(){
             // alert("NICEEEEE")
             this.state.count++
             console.log(this.state.count)
@@ -73,3 +72,17 @@ testElement.appendChild(myComponent)
 // })
 
 Parvin.render(testElement, document.getElementById('app'))
+
+const template = `
+<test>
+    <my-custom> custom </my-custom>
+    <my-custom />
+    <MyCustom> custom 1 </MyCustom>
+    <MyCustom />
+</test>
+`
+
+const parser = new DOMParser()
+const doc = parser.parseFromString(template, 'text/html')
+const rootElement = doc.body.firstChild
+// console.log(rootElement.tagName.toLowerCase())

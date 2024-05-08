@@ -1,6 +1,8 @@
+import parvinConfig from './configs/general'
 import { createElement, Element } from './element'
 import type IParser from './interfaces/IParser'
 import type IScript from './interfaces/IScript'
+import { getDomElementsAttributes } from './utils/dom'
 
 const parser = (data: string): IParser => {
     try {
@@ -46,7 +48,7 @@ const eventParser = (
     // console.log(node)
     node.getAttributeNames().forEach((event) => {
         events.push({
-            eventName: event.replace('@', ''),
+            eventName: event.replace(parvinConfig.templateEventSyntax, ''),
             eventFunction: node.getAttribute(event),
         })
     })
@@ -62,23 +64,25 @@ const elementParser = (template: string, methods: Object | undefined) => {
     const rootElement = doc.body.firstChild
 
     const createChildElements = (
-        childNodes: ChildNode,
+        childNodes: NodeListOf<ChildNode>,
         parentElement: Element,
     ) => {
         // @ts-ignore
         for (const childNode of childNodes) {
             if (childNode instanceof HTMLElement) {
+                const attrs = getDomElementsAttributes(childNode)
+
                 const element = createElement(
                     // @ts-ignore
                     childNode.tagName
                         ? childNode.tagName.toLocaleLowerCase()
                         : 'div',
-                    {},
+                    attrs,
                     [],
                 )
 
                 eventParser(childNode, element, methods)
-                // @ts-ignore
+
                 parentElement.appendChild(element)
                 // instanceof Text
                 // @ts-ignore
@@ -89,7 +93,6 @@ const elementParser = (template: string, methods: Object | undefined) => {
                 }
 
                 if (childNode.childNodes.length) {
-                    // @ts-ignore
                     createChildElements(childNode.childNodes, element)
                 }
             }
@@ -97,13 +100,17 @@ const elementParser = (template: string, methods: Object | undefined) => {
     }
 
     if (rootElement instanceof HTMLElement) {
+        const attrs = getDomElementsAttributes(rootElement)
+
         const element = createElement(
             // @ts-ignore
             rootElement.tagName.toLocaleLowerCase(),
-            {},
+            attrs,
             [],
         )
+
         eventParser(rootElement, element, methods)
+
         // @ts-ignore
         for (const cn of rootElement.childNodes) {
             if (cn instanceof Text && cn.parentNode === rootElement) {
@@ -111,7 +118,6 @@ const elementParser = (template: string, methods: Object | undefined) => {
             }
         }
 
-        // @ts-ignore
         createChildElements(rootElement.childNodes, element)
 
         return element
