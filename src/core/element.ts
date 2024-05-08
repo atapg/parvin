@@ -1,9 +1,10 @@
+import { Component } from './component'
 import { generateToken } from './utils/helpers'
 
 class Element {
     tag: keyof HTMLElementTagNameMap
     props: Record<string, string>
-    children: Element[]
+    children: Array<Component | Element | string>
     parent: Element | null
     token: string
     declare DOMElement: HTMLElement
@@ -12,7 +13,7 @@ class Element {
     constructor(
         tag: keyof HTMLElementTagNameMap,
         props: Record<string, string> = {},
-        children: Array<Element> = [],
+        children: Array<Component | Element | string> = [],
     ) {
         this.tag = tag
         this.props = props
@@ -26,13 +27,17 @@ class Element {
     }
 
     // Appending child to the element
-    appendChild(child: Element | string) {
+    appendChild(child: Component | Element | string) {
         if (child instanceof Element) {
             child.parent = this
         }
 
         // @ts-ignore
         this.children.push(child)
+
+        if (child instanceof Component) {
+            this.rerender()
+        }
     }
 
     addEvent(
@@ -70,6 +75,7 @@ class Element {
 
     // Recursive render function to show elements in the DOM
     render() {
+        // console.log('renders')
         for (const [key, value] of Object.entries(this.props)) {
             // @ts-ignore
             this.DOMElement.setAttribute(key, value)
@@ -79,6 +85,7 @@ class Element {
         this.DOMElement.setAttribute('parvin_token', this.token)
 
         this.children.forEach((child) => {
+            // console.log(child)
             if (child instanceof Element) {
                 const childElement = child.render()
                 this.DOMElement.appendChild(childElement)

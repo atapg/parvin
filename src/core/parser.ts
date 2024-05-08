@@ -9,17 +9,28 @@ const parser = (data: string): IParser => {
         const templateMatch = data.match(/<template>([\s\S]+)<\/template>/)
         const scriptMatch = data.match(/<script>([\s\S]+)<\/script>/)
 
-        if (!templateMatch || !scriptMatch) return { template: '', script: {} }
+        let template = ''
 
-        const template = templateMatch[1].trim()
-        const scriptContent = scriptMatch[1].trim()
+        if (templateMatch) {
+            template = templateMatch[1].trim()
+        }
 
-        const start = scriptContent.indexOf('{')
-        const end = scriptContent.lastIndexOf('}')
-        if (start === -1 || end === -1) return { template: '', script: {} }
+        let scriptContent = '{}'
+        let dataObjectStr = ''
 
-        const dataObjectStr = scriptContent.substring(start, end + 1)
-        const dataObject: IScript = new Function(`return ${dataObjectStr}`)()
+        if (scriptMatch) {
+            scriptContent = scriptMatch[1].trim()
+            const start = scriptContent.indexOf('{')
+            const end = scriptContent.lastIndexOf('}')
+            if (start === -1 || end === -1) return { template: '', script: {} }
+            dataObjectStr = scriptContent.substring(start, end + 1)
+        }
+
+        let dataObject: IScript = {}
+
+        if (dataObjectStr) {
+            dataObject = new Function(`return ${dataObjectStr}`)()
+        }
 
         return { template, script: dataObject }
     } catch (error) {
