@@ -35,9 +35,7 @@ class Element {
         // @ts-ignore
         this.children.push(child)
 
-        if (child instanceof Component) {
-            this.rerender()
-        }
+        this.rerender()
     }
 
     addEvent(
@@ -84,8 +82,10 @@ class Element {
         // Set parvin id
         this.DOMElement.setAttribute('parvin_token', this.token)
 
+        // Remove all children
+        this.DOMElement.innerHTML = ''
+
         this.children.forEach((child) => {
-            // console.log(child)
             if (child instanceof Element) {
                 const childElement = child.render()
                 this.DOMElement.appendChild(childElement)

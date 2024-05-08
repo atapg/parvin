@@ -5,11 +5,10 @@ const NavbarComponent = Parvin.createComponent(
     `<template>
       <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar2</a>
+          <a class="navbar-brand" href="#">Navbar</a>
         </div> 
       </nav>
     </template>
-    <script></script>
     `,
 )
 
