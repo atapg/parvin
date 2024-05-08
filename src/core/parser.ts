@@ -58,18 +58,18 @@ const eventParser = (
     const events: Record<string, string | null>[] = []
     // console.log(node)
     node.getAttributeNames().forEach((event) => {
-        events.push({
-            eventName: event.replace(parvinConfig.templateEventSyntax, ''),
-            eventFunction: node.getAttribute(event),
-        })
+        if (event.startsWith(parvinConfig.templateEventSyntax)) {
+            events.push({
+                eventName: event.replace(parvinConfig.templateEventSyntax, ''),
+                eventFunction: node.getAttribute(event),
+            })
+        }
     })
 
     setEvents(element, events, methods)
 }
 
 const elementParser = (template: string, methods: Object | undefined) => {
-    const events: any = {}
-
     const parser = new DOMParser()
     const doc = parser.parseFromString(template, 'text/html')
     const rootElement = doc.body.firstChild

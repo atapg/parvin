@@ -1,4 +1,5 @@
 import { Component } from './component'
+import type IElementEvents from './interfaces/IElementEvents'
 import { generateToken } from './utils/helpers'
 
 class Element {
@@ -9,6 +10,7 @@ class Element {
     token: string
     declare DOMElement: HTMLElement
     element: Element
+    events: IElementEvents[] = []
 
     constructor(
         tag: keyof HTMLElementTagNameMap,
@@ -43,6 +45,12 @@ class Element {
         listener: EventListenerOrEventListenerObject,
         options?: boolean | AddEventListenerOptions,
     ) {
+        this.events.push({
+            eventType,
+            listener,
+            options,
+        })
+
         this.DOMElement.addEventListener(eventType, listener, options)
     }
 
@@ -51,6 +59,7 @@ class Element {
         listener: EventListenerOrEventListenerObject,
         options?: boolean | EventListenerOptions,
     ) {
+        // TODO remove event from event array
         this.DOMElement.removeEventListener(eventType, listener, options)
     }
 
@@ -92,6 +101,11 @@ class Element {
             } else {
                 this.DOMElement.appendChild(document.createTextNode(child))
             }
+        })
+
+        // Set events
+        this.events.forEach(({ eventType, listener, options }) => {
+            this.addEvent(eventType, listener, options)
         })
 
         return this.DOMElement

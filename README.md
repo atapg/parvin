@@ -151,3 +151,13 @@ Congrats! you now created your first component!
 • Methods should be declared inside the methods object.
 
 • There are 4 lifecycle methods named: onCreated, onMounted, onUpdated, onDestroyed.
+
+## Todos
+
+• Add css/style support in the component
+
+• Add component syntax support for template
+
+• Add custom file component support
+
+• And many many more...
