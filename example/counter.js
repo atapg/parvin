@@ -2,9 +2,9 @@ const CounterComponent = Parvin.createComponent(
     'Counter',
     'div',
     {},
-    `<template>
-        <div>
-            <div class="card" style="width: 18rem; margin: 2rem auto;">
+    `<template> 
+        <div style="display: flex; gap: 1rem; margin: 1rem">
+            <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <p class="card-text">My counter</p>
                     <p> count: $$counter </p>
@@ -12,7 +12,7 @@ const CounterComponent = Parvin.createComponent(
                     <button type="button" $click="decrement" class="btn btn-danger" style="margin-left:15px;">Decrement</button>
                 </div>
             </div>
-            <div class="card" style="width: 18rem; margin: 2rem auto;">
+            <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <p class="card-text">Form</p>
                     <p> name: $$form.user.name </p>
@@ -20,6 +20,13 @@ const CounterComponent = Parvin.createComponent(
                     <p> form: $$form</p>
                     <button type="button" $click="toUpper" class="btn btn-primary">Upper case</button>
                     <button type="button" $click="toLower" class="btn btn-danger" style="margin-left:15px;">Lower case</button>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <p class="card-text">Items</p>
+                    <p> items: $$items </p>
+                    <button type="button" $click="addItem" class="btn btn-primary">Add item</button>
                 </div>
             </div>
         </div>
@@ -33,7 +40,8 @@ const CounterComponent = Parvin.createComponent(
                         name: "ata",
                         lastName: "parvin ghods"
                     }
-                }
+                },
+                items:[]
             },
             methods:{
                 increment: function(){
@@ -49,6 +57,9 @@ const CounterComponent = Parvin.createComponent(
                 toLower: function(){
                     this.state.form.user.name = "ata"
                     this.state.form.user.lastName = "parvin ghods"
+                },
+                addItem: function(){
+                    this.state.items.push("item")
                 }
             },
             onCreated: function(){

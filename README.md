@@ -185,4 +185,6 @@ Congrats! you now created your first component!
 
 • Add conditional rendering
 
+• Add item loops
+
 • And many many more...

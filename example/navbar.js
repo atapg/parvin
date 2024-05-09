@@ -5,9 +5,9 @@ const NavbarComponent = Parvin.createComponent(
     `<template>
       <nav class="navbar bg-primary" data-bs-theme="dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Counter App</a> 
+          <a class="navbar-brand" href="#">My App</a> 
         </div> 
-      </nav>
+      </nav> 
     </template>
     `,
 )
