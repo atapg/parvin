@@ -43,7 +43,6 @@ const CounterComponent = Parvin.createComponent(
             watchers:{
                 counter(oldValue, newValue, property){
                     console.log(property,"value changed from ", oldValue, " to ", newValue)
-                    console.log(this)
                 }
             }
         }

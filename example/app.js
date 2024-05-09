@@ -4,6 +4,7 @@ const mainElement = Parvin.createElement('div', {}, [])
 import('./navbar.js').then((NavbarComponent) => {
     mainElement.appendChild(NavbarComponent.default)
 })
+
 import('./counter.js').then((CounterComponent) => {
     mainElement.appendChild(CounterComponent.default)
 })

@@ -7,7 +7,7 @@ class Element {
     props: Record<string, string>
     children: Array<Component | Element | string>
     parent: Element | null
-    token: string
+    id: string
     declare DOMElement: HTMLElement
     element: Element
     events: IElementEvents[] = []
@@ -25,7 +25,7 @@ class Element {
         this.DOMElement = document.createElement(this.tag)
 
         // For future use
-        this.token = generateToken()
+        this.id = generateToken()
     }
 
     // Appending child to the element
@@ -38,6 +38,18 @@ class Element {
         this.children.push(child)
 
         this.rerender()
+    }
+
+    removeChild(child: Component | Element) {
+        const index = this.children.indexOf(child)
+
+        this.children.splice(index, 1)
+
+        this.rerender()
+
+        if (child instanceof Component) {
+            child.onDestroyed()
+        }
     }
 
     addEvent(
@@ -89,7 +101,7 @@ class Element {
         }
 
         // Set parvin id
-        // this.DOMElement.setAttribute('prv', this.token)
+        // this.DOMElement.setAttribute('prv', this.id)
 
         // Remove all children
         this.DOMElement.innerHTML = ''

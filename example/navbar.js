@@ -9,10 +9,6 @@ const NavbarComponent = Parvin.createComponent(
         </div> 
       </nav>
     </template>
-    <script>
-    {
-    }
-    </script>
     `,
 )
 
