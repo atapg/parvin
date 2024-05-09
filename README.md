@@ -73,56 +73,46 @@ We can create component by using createComponent function
 ```javascript
 const template = `
 <template>
-    <div>
-        test
-        <p>Hello World!</p>
-        <p> $$count </p>
-        <button $click="decrease">
-            Decrease
-        </button>
-        <button $click="increase">
-            Increase
-        </button>
-        <div>
-            <p>
-                test   nested   
-                <span>Another one</span>    
-            </p>
+    <div class="card" style="width: 18rem; margin: 5rem auto;">
+        <div class="card-body">
+            <p class="card-text">My counter</p>
+            <p> count: $$counter </p>
+            <button type="button" $click="increment" class="btn btn-primary">Increment</button>
+            <button type="button" $click="decrement" class="btn btn-danger" style="margin-left:15px;">Decrement</button>
         </div>
     </div>
 </template>
-
 <script>
-{
-    state: {
-        count: 1
-    },
-    onCreated: function(){
-        console.log("component created")
-    },
-    onDestroyed: function(){
-        console.log("component destroyed")
-    },
-    onUpdated: function(){
-        console.log("component updated")
-    },
-    onMounted: function(){
-        console.log("component mounted")
-    }, 
-    methods: {
-        increase: function(type){
-            this.state.count++
+    {
+        state: {
+            counter: 1
         },
-        decrease: function(type){
-            this.state.count--
+        methods:{
+            increment: function(){
+                this.state.counter++
+            },
+            decrement: function(){
+                this.state.counter--
+            }
         },
-    },
-    watchers:{
-        count: function(oldValue, newValue, property){
-            console.log(property,"value changed from ", oldValue, " to ", newValue)
+        onCreated: function(){
+            console.log("component created")
+        },
+        onDestroyed: function(){
+            console.log("component destroyed")
+        },
+        onUpdated: function(){
+            console.log("component updated")
+        },
+        onMounted: function(){
+            console.log("component mounted")
+        },
+        watchers:{
+            counter(oldValue, newValue, property){
+                console.log(property,"value changed from ", oldValue, " to ", newValue)
+            }
         }
     }
-}
 </script>
 `
 

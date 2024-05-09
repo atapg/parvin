@@ -1,12 +1,7 @@
 import { Element } from './element'
 import type IGlobalObject from './interfaces/IGlobalObject'
-import type IScript from './interfaces/IScript'
 import { elementParser, parser } from './parser'
-import {
-    renderElements,
-    renderTemplateEvents,
-    renderTemplateStates,
-} from './renderer'
+import { renderTemplateStates } from './renderer'
 import { State } from './state'
 
 class Component extends Element {
