@@ -29,7 +29,7 @@ function renderTemplateEvents(template: string, methods: Object | undefined) {
     const doc = parser.parseFromString(template, 'text/html')
     const rootElement = doc.body.firstChild
 
-    console.log(rootElement?.childNodes)
+    // console.log(rootElement?.childNodes)
 
     return template
 }

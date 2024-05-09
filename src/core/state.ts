@@ -23,6 +23,8 @@ class State {
         this.component.onStateUpdate(oldValue, newValue, property)
     }
 
+    get(object: Object, property: string, proxyObject: Object) {}
+
     setComponent(component: Component) {
         this.component = component
     }

@@ -87,7 +87,7 @@ const template = `
         state: {
             counter: 1
         },
-        methods:{
+        methods: {
             increment: function(){
                 this.state.counter++
             },
@@ -107,7 +107,7 @@ const template = `
         onMounted: function(){
             console.log("component mounted")
         },
-        watchers:{
+        watchers: {
             counter(oldValue, newValue, property){
                 console.log(property,"value changed from ", oldValue, " to ", newValue)
             }

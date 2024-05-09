@@ -54,25 +54,25 @@ class Component extends Element {
     // Lifecycle methods
     onCreated() {
         if (this.script?.onCreated) {
-            this.script?.onCreated()
+            this.script?.onCreated.call(this.globalObject)
         }
     }
 
     onMounted() {
         if (this.script?.onMounted) {
-            this.script?.onMounted()
+            this.script?.onMounted.call(this.globalObject)
         }
     }
 
     onDestroyed() {
         if (this.script?.onDestroyed) {
-            this.script?.onDestroyed()
+            this.script?.onDestroyed.call(this.globalObject)
         }
     }
 
     onUpdated() {
         if (this.script?.onUpdated) {
-            this.script?.onUpdated()
+            this.script?.onUpdated.call(this.globalObject)
         }
     }
 

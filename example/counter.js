@@ -19,6 +19,7 @@ const CounterComponent = Parvin.createComponent(
             },
             methods:{
                 increment: function(){
+                    console.log(this)
                     this.state.counter++
                 },
                 decrement: function(){
@@ -36,11 +37,14 @@ const CounterComponent = Parvin.createComponent(
             },
             onMounted: function(){
                 console.log("component mounted")
+                // setInterval(() => {
+                //     this.state.counter++
+                // }, 1000)
             },
             watchers:{
-                counter(oldValue, newValue, property){
-                    console.log(property,"value changed from ", oldValue, " to ", newValue)
-                }
+                // counter(oldValue, newValue, property){
+                //     console.log(property,"value changed from ", oldValue, " to ", newValue)
+                // }
             }
         }
      </script>
