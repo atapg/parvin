@@ -150,4 +150,10 @@ Congrats! you now created your first component!
 
 • Add custom file component support
 
+• Add router
+
+• Add input binding
+
+• Add conditional rendering
+
 • And many many more...
