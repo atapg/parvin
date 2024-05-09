@@ -89,7 +89,7 @@ class Element {
         }
 
         // Set parvin id
-        this.DOMElement.setAttribute('parvin_token', this.token)
+        // this.DOMElement.setAttribute('prv', this.token)
 
         // Remove all children
         this.DOMElement.innerHTML = ''

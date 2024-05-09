@@ -46,14 +46,13 @@ class Component extends Element {
 
     onStateUpdate(oldValue: any, newValue: any, property: any) {
         if (this.state) {
-            // this.state.update(newState)
-            this.rerender()
-
             // @ts-ignore
             if (this.watchers[property]) {
                 // @ts-ignore
                 this.watchers[property](oldValue, newValue, property)
             }
+
+            this.rerender()
         }
     }
 

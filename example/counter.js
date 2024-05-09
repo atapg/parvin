@@ -36,7 +36,12 @@ const CounterComponent = Parvin.createComponent(
             },
             onMounted: function(){
                 console.log("component mounted")
-            }, 
+            },
+            watchers:{
+                counter(oldValue, newValue, property){
+                    console.log(property,"value changed from ", oldValue, " to ", newValue)
+                }
+            }
         }
      </script>
     `,
