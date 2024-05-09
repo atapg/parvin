@@ -44,7 +44,12 @@ class Component extends Element {
             // @ts-ignore
             if (this.watchers[property]) {
                 // @ts-ignore
-                this.watchers[property](oldValue, newValue, property)
+                this.watchers[property].call(
+                    this.globalObject,
+                    oldValue,
+                    newValue,
+                    property,
+                )
             }
 
             this.rerender()
