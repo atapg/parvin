@@ -56,6 +56,11 @@ const setEvents = (
 ) => {
     events.forEach((event) => {
         // @ts-ignore
+        if (!methods[event.eventFunction]) {
+            console.error(`'${event.eventFunction}' function not declared`)
+        }
+
+        // @ts-ignore
         element.addEvent(event.eventName, () => methods[event.eventFunction]())
     })
 }
@@ -79,70 +84,89 @@ const eventParser = (
 }
 
 const elementParser = (template: string, methods: Object | undefined) => {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(template, 'text/html')
-    const rootElement = doc.body.firstChild
+    try {
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(template, 'text/html')
 
-    const createChildElements = (
-        childNodes: NodeListOf<ChildNode>,
-        parentElement: Element,
-    ) => {
+        let rootCount = 0
+        let rootElement
+
         // @ts-ignore
-        for (const childNode of childNodes) {
+        for (const childNode of doc.body.childNodes) {
             if (childNode instanceof HTMLElement) {
-                const attrs = getDomElementsAttributes(childNode)
+                rootCount++
+            }
+        }
 
-                const element = createElement(
+        if (rootCount > 1) {
+            console.error('Component must have one root element')
+            return
+        }
+
+        rootElement = doc.body.firstChild
+
+        const createChildElements = (
+            childNodes: NodeListOf<ChildNode>,
+            parentElement: Element,
+        ) => {
+            // @ts-ignore
+            for (const childNode of childNodes) {
+                if (childNode instanceof HTMLElement) {
+                    const attrs = getDomElementsAttributes(childNode)
+
+                    const element = createElement(
+                        // @ts-ignore
+                        childNode.tagName
+                            ? childNode.tagName.toLocaleLowerCase()
+                            : 'div',
+                        attrs,
+                        [],
+                    )
+
+                    eventParser(childNode, element, methods)
+
+                    parentElement.appendChild(element)
+                    // instanceof Text
                     // @ts-ignore
-                    childNode.tagName
-                        ? childNode.tagName.toLocaleLowerCase()
-                        : 'div',
-                    attrs,
-                    [],
-                )
+                    for (const cn of childNode.childNodes) {
+                        if (cn instanceof Text && childNode === cn.parentNode) {
+                            element.appendChild(cn.data)
+                        }
+                    }
 
-                eventParser(childNode, element, methods)
-
-                parentElement.appendChild(element)
-                // instanceof Text
-                // @ts-ignore
-                for (const cn of childNode.childNodes) {
-                    if (cn instanceof Text && childNode === cn.parentNode) {
-                        element.appendChild(cn.data)
+                    if (childNode.childNodes.length) {
+                        createChildElements(childNode.childNodes, element)
                     }
                 }
+            }
+        }
 
-                if (childNode.childNodes.length) {
-                    createChildElements(childNode.childNodes, element)
+        if (rootElement instanceof HTMLElement) {
+            const attrs = getDomElementsAttributes(rootElement)
+
+            const element = createElement(
+                // @ts-ignore
+                rootElement.tagName.toLocaleLowerCase(),
+                attrs,
+                [],
+            )
+
+            eventParser(rootElement, element, methods)
+
+            // @ts-ignore
+            for (const cn of rootElement.childNodes) {
+                if (cn instanceof Text && cn.parentNode === rootElement) {
+                    element.appendChild(cn.data)
                 }
             }
+
+            createChildElements(rootElement.childNodes, element)
+
+            return element
         }
+    } catch (error) {
+        console.error(error)
     }
-
-    if (rootElement instanceof HTMLElement) {
-        const attrs = getDomElementsAttributes(rootElement)
-
-        const element = createElement(
-            // @ts-ignore
-            rootElement.tagName.toLocaleLowerCase(),
-            attrs,
-            [],
-        )
-
-        eventParser(rootElement, element, methods)
-
-        // @ts-ignore
-        for (const cn of rootElement.childNodes) {
-            if (cn instanceof Text && cn.parentNode === rootElement) {
-                element.appendChild(cn.data)
-            }
-        }
-
-        createChildElements(rootElement.childNodes, element)
-
-        return element
-    }
-
     return null
 }
 
