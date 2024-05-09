@@ -5,11 +5,15 @@ import type IScript from './interfaces/IScript'
 import { getDomElementsAttributes } from './utils/dom'
 
 const parser = (data: string): IParser => {
+    let script: IScript = {
+        methods: {},
+        watchers: {},
+    }
+    let template = ''
+
     try {
         const templateMatch = data.match(/<template>([\s\S]+)<\/template>/)
         const scriptMatch = data.match(/<script>([\s\S]+)<\/script>/)
-
-        let template = ''
 
         if (templateMatch) {
             template = templateMatch[1].trim()
@@ -22,20 +26,26 @@ const parser = (data: string): IParser => {
             scriptContent = scriptMatch[1].trim()
             const start = scriptContent.indexOf('{')
             const end = scriptContent.lastIndexOf('}')
-            if (start === -1 || end === -1) return { template: '', script: {} }
+            if (start === -1 || end === -1) return { template, script }
             dataObjectStr = scriptContent.substring(start, end + 1)
         }
 
-        let dataObject: IScript = {}
-
         if (dataObjectStr) {
-            dataObject = new Function(`return ${dataObjectStr}`)()
+            script = new Function(`return ${dataObjectStr}`)()
         }
 
-        return { template, script: dataObject }
+        if (!script.hasOwnProperty('methods')) {
+            script.methods = {}
+        }
+
+        if (!script.hasOwnProperty('watchers')) {
+            script.watchers = {}
+        }
+
+        return { template, script }
     } catch (error) {
         console.error(error)
-        return { template: '', script: {} }
+        return { template, script }
     }
 }
 
@@ -65,7 +75,6 @@ const eventParser = (
             })
         }
     })
-
     setEvents(element, events, methods)
 }
 

@@ -24,7 +24,19 @@ const CounterComponent = Parvin.createComponent(
                 decrement: function(){
                     this.state.counter--
                 }
-            }
+            },
+            onCreated: function(){
+                console.log("component created")
+            },
+            onDestroyed: function(){
+                console.log("component destroyed")
+            },
+            onUpdated: function(){
+                console.log("component updated")
+            },
+            onMounted: function(){
+                console.log("component mounted")
+            }, 
         }
      </script>
     `,

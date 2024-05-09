@@ -1,4 +1,6 @@
 import { Element } from './element'
+import type IGlobalObject from './interfaces/IGlobalObject'
+import type IScript from './interfaces/IScript'
 import { elementParser, parser } from './parser'
 import {
     renderElements,
@@ -12,10 +14,12 @@ class Component extends Element {
     template
     script
     state: State | null
-    methods: Object | undefined
+    methods: Object
     watchers: Object | undefined
-    globalObject: any
+    declare globalObject: IGlobalObject
     declare DOMElement: HTMLElement
+    mounted = false
+    created = false
 
     constructor(
         name: string,
@@ -29,12 +33,12 @@ class Component extends Element {
 
         // Parse data and seperate template and scripts
         const data = parser(template)
-        this.template = data?.template
+        this.template = data.template
 
-        this.script = data?.script
+        this.script = data.script
 
         this.state = new State(this.script.state ? this.script.state : {}, this)
-        this.methods = this.script?.methods
+        this.methods = this.script.methods
         this.watchers = this.script?.watchers
 
         this.globalObject = { ...this.methods, ...this.state }
@@ -90,7 +94,10 @@ class Component extends Element {
 
     // Override render method for custom component rendering
     render() {
-        this.onCreated()
+        if (!this.created) {
+            this.onCreated()
+            this.created = true
+        }
 
         this.DOMElement = super.render()
 
@@ -107,7 +114,10 @@ class Component extends Element {
             }
         }
 
-        this.onMounted()
+        if (!this.mounted) {
+            this.onMounted()
+            this.mounted = true
+        }
 
         return this.DOMElement
     }
