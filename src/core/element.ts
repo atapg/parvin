@@ -6,13 +6,14 @@ class Element {
     tag: keyof HTMLElementTagNameMap
     props: Record<string, string>
     children: Array<Component | Element | string>
-    parent: Element | null
+    declare parent: Element | Component
     id: string
     declare DOMElement: HTMLElement
     element: Element
     events: IElementEvents[] = []
     show: boolean = true
     condition: boolean = true
+    declare innerText: string
 
     constructor(
         tag: keyof HTMLElementTagNameMap,
@@ -23,7 +24,6 @@ class Element {
         this.props = props
         this.children = children
         this.element = this
-        this.parent = null
         this.DOMElement = document.createElement(this.tag)
 
         // For future use
@@ -32,7 +32,7 @@ class Element {
 
     // Appending child to the element
     appendChild(child: Component | Element | string) {
-        if (child instanceof Element) {
+        if (typeof child !== 'string') {
             child.parent = this
         }
 
@@ -81,6 +81,10 @@ class Element {
         return this
     }
 
+    getParentElement() {
+        return this.parent
+    }
+
     rerender() {
         if (this.DOMElement) {
             const oldElement = this.DOMElement
@@ -92,6 +96,11 @@ class Element {
 
     destroy() {
         this.DOMElement.remove()
+    }
+
+    setCondition(v: boolean) {
+        this.condition = v
+        this.rerender()
     }
 
     // Recursive render function to show elements in the DOM
@@ -110,8 +119,11 @@ class Element {
 
         this.children.forEach((child) => {
             if (child instanceof Element) {
-                const childElement = child.render()
-                this.DOMElement.appendChild(childElement)
+                child.render()
+                const childElement = child.DOMElement
+                if (child.condition) {
+                    this.DOMElement.appendChild(childElement)
+                }
             } else {
                 this.DOMElement.appendChild(document.createTextNode(child))
             }

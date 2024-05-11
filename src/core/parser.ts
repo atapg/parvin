@@ -94,9 +94,9 @@ const elementParser = (
                         [],
                     )
 
-                    templateEngineParser(childNode, element, methods, state)
-
                     parentElement.appendChild(element)
+
+                    templateEngineParser(childNode, element, methods, state)
                     // instanceof Text
                     // @ts-ignore
                     for (const cn of childNode.childNodes) {
@@ -153,12 +153,11 @@ const templateEngineParser = (
     setEvents(element, events, methods)
 
     // Handle elements conditonal renderings
-    // checkConditionalRenders(element, events, methods, state)
+    checkConditionalRenders(element, events, methods, state)
 }
 
 const getElementEvents = (node: HTMLElement) => {
     const events: Record<string, string | null>[] = []
-    const conditions = getConditions()
 
     // console.log(node)
     node.getAttributeNames().forEach((event) => {
@@ -167,13 +166,10 @@ const getElementEvents = (node: HTMLElement) => {
                 parvinConfig.templateEventSyntax,
                 '',
             )
-
-            if (conditions.indexOf(eventType) === -1) {
-                events.push({
-                    type: eventType,
-                    name: node.getAttribute(event),
-                })
-            }
+            events.push({
+                type: eventType,
+                name: node.getAttribute(event),
+            })
         }
     })
 
@@ -185,14 +181,18 @@ const setEvents = (
     events: Record<string, string | null>[],
     methods: Object | undefined,
 ) => {
+    const conditions = getConditions()
     events.forEach((event) => {
-        // @ts-ignore
-        if (!methods[event.name]) {
-            console.error(`'${event.name}' function not declared`)
+        if (event.type) {
+            if (conditions.indexOf(event.type) === -1) {
+                // @ts-ignore
+                if (!methods[event.name]) {
+                    console.error(`'${event.name}' function not declared`)
+                }
+                // @ts-ignore
+                element.addEvent(event.type, () => methods[event.name]())
+            }
         }
-
-        // @ts-ignore
-        element.addEvent(event.type, () => methods[event.name]())
     })
 }
 
@@ -220,13 +220,37 @@ const checkConditionalRenders = (
                             if (attr.name) {
                                 const data = state.state[attr.name]
 
-                                if (data) {
-                                    element.condition = data
-                                } else {
+                                element.setCondition(!!data)
+
+                                if (typeof data === 'undefined') {
                                     console.error(`${attr.name} is undefined`)
-                                    element.condition = false
                                 }
                             }
+                        } else if (
+                            attr.type === parvinConfig.elseIfConditionName
+                        ) {
+                        } else if (
+                            attr.type === parvinConfig.elseConditionName
+                        ) {
+                            const elementIndex =
+                                element.parent.children.indexOf(element)
+                            const prevElementIndex =
+                                element.parent.children[elementIndex - 1]
+
+                            if (prevElementIndex instanceof Element) {
+                                element.setCondition(
+                                    !prevElementIndex.condition,
+                                )
+                            }
+                            //
+                            //
+                            // const data = state.state[attr.name]
+                            // if (data) {
+                            //     element.setCondition(data)
+                            // } else {
+                            //     console.error(`${attr.name} is undefined`)
+                            //     element.setCondition(false)
+                            // }
                         }
                     }
                 }

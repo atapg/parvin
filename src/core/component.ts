@@ -12,7 +12,7 @@ class Component extends Element {
     methods: Object
     watchers: Object | undefined
     declare globalObject: IGlobalObject
-    declare DOMElement: HTMLElement
+    declare ComponentDOMElement: HTMLElement
     mounted = false
     created = false
 
@@ -98,7 +98,7 @@ class Component extends Element {
             this.created = true
         }
 
-        this.DOMElement = super.render()
+        this.ComponentDOMElement = super.render()
 
         if (this.template) {
             const renderedStates = renderTemplateStates(
@@ -113,7 +113,7 @@ class Component extends Element {
             )
 
             if (elements) {
-                this.DOMElement.appendChild(elements.render())
+                this.ComponentDOMElement.appendChild(elements.render())
             }
         }
 
@@ -122,7 +122,7 @@ class Component extends Element {
             this.mounted = true
         }
 
-        return this.DOMElement
+        return this.ComponentDOMElement
     }
 }
 

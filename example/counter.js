@@ -34,11 +34,11 @@ const CounterComponent = Parvin.createComponent(
                     <p class="card-text">Boolean thing</p>
                     <p> condition: $$condition </p>
                     <div $if="condition" class="alert alert-warning" role="alert">
+                        Condition is true
+                    </div>
+                    <div $else class="alert alert-info" role="alert">
                         Condition is false
                     </div>
-                    <!-- <div class="alert alert-info" role="alert">
-                        Condition is true
-                    </div> --->
                     <button type="button" $click="toggle" class="btn btn-primary">Toggle</button>
                 </div>
             </div>
