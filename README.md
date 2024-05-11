@@ -72,9 +72,9 @@ We can create component by using createComponent function
 
 ```javascript
 const template = `
-<template>
-    <div>
-        <div class="card" style="width: 18rem; margin: 2rem auto;">
+<template> 
+    <div style="display: flex; gap: 1rem; margin: 1rem">
+        <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <p class="card-text">My counter</p>
                 <p> count: $$counter </p>
@@ -82,7 +82,7 @@ const template = `
                 <button type="button" $click="decrement" class="btn btn-danger" style="margin-left:15px;">Decrement</button>
             </div>
         </div>
-        <div class="card" style="width: 18rem; margin: 2rem auto;">
+        <div class="card" style="width: 18rem;">
             <div class="card-body">
                 <p class="card-text">Form</p>
                 <p> name: $$form.user.name </p>
@@ -90,6 +90,29 @@ const template = `
                 <p> form: $$form</p>
                 <button type="button" $click="toUpper" class="btn btn-primary">Upper case</button>
                 <button type="button" $click="toLower" class="btn btn-danger" style="margin-left:15px;">Lower case</button>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <p class="card-text">Items</p>
+                <p> items: $$items </p>
+                <button type="button" $click="addItem" class="btn btn-primary">Add item</button>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <p class="card-text">Boolean thing</p>
+                <p> condition: $$condition </p>
+                <div $if="condition" class="alert alert-warning" role="alert">
+                    Condition is true
+                </div>
+                <!--<div $else-if="condition2" class="alert alert-warning" role="alert">
+                    To be added soon
+                </div> --->
+                <div $else class="alert alert-info" role="alert">
+                    Condition is false
+                </div>
+                <button type="button" $click="toggle" class="btn btn-primary">Toggle</button>
             </div>
         </div>
     </div>
@@ -103,7 +126,10 @@ const template = `
                     name: "ata",
                     lastName: "parvin ghods"
                 }
-            }
+            },
+            items:[],
+            condition: false,
+            condition2: false,
         },
         methods:{
             increment: function(){
@@ -119,6 +145,12 @@ const template = `
             toLower: function(){
                 this.state.form.user.name = "ata"
                 this.state.form.user.lastName = "parvin ghods"
+            },
+            addItem: function(){
+                this.state.items.push("item")
+            },
+            toggle: function(){
+                this.state.condition = !this.state.condition
             }
         },
         onCreated: function(){
@@ -183,7 +215,7 @@ Congrats! you now created your first component!
 
 • Add input binding
 
-• Add conditional rendering
+• Add conditional rendering (if, else added ✅)
 
 • Add item loops
 

@@ -36,6 +36,9 @@ const CounterComponent = Parvin.createComponent(
                     <div $if="condition" class="alert alert-warning" role="alert">
                         Condition is true
                     </div>
+                    <!--<div $else-if="condition2" class="alert alert-warning" role="alert">
+                        To be added soon
+                    </div> --->
                     <div $else class="alert alert-info" role="alert">
                         Condition is false
                     </div>
@@ -55,7 +58,8 @@ const CounterComponent = Parvin.createComponent(
                     }
                 },
                 items:[],
-                condition: false
+                condition: false,
+                condition2: false,
             },
             methods:{
                 increment: function(){
