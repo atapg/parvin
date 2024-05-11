@@ -8,7 +8,6 @@ class Component extends Element {
     name
     template
     script
-    state: State | null
     methods: Object
     watchers: Object | undefined
     declare globalObject: IGlobalObject

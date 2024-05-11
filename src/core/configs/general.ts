@@ -5,6 +5,7 @@ const parvinConfig = {
     ifConditionName: 'if',
     elseIfConditionName: 'else-if',
     elseConditionName: 'else',
+    templateModelBindingSyntax: 'model',
 }
 
 export default parvinConfig

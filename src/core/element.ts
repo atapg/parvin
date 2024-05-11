@@ -1,5 +1,6 @@
 import { Component } from './component'
 import type IElementEvents from './interfaces/IElementEvents'
+import type { State } from './state'
 import { generateToken } from './utils/helpers'
 
 class Element {
@@ -7,6 +8,7 @@ class Element {
     props: Record<string, string>
     children: Array<Component | Element | string>
     declare parent: Element | Component
+    declare state: State | null
     id: string
     declare DOMElement: HTMLElement
     element: Element
@@ -14,6 +16,7 @@ class Element {
     show: boolean = true
     condition: boolean = true
     declare innerText: string
+    declare inputModel: any
 
     constructor(
         tag: keyof HTMLElementTagNameMap,

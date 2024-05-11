@@ -154,6 +154,9 @@ const templateEngineParser = (
 
     // Handle elements conditonal renderings
     checkConditionalRenders(element, events, methods, state)
+
+    // Handle input binding
+    checkInputBinding(element, events, state)
 }
 
 const getElementEvents = (node: HTMLElement) => {
@@ -265,6 +268,28 @@ const getConditions = () => {
         parvinConfig.elseIfConditionName,
         parvinConfig.elseConditionName,
     ]
+}
+
+const checkInputBinding = (
+    element: Element,
+    attributes: Record<string, string | null>[],
+    state: State | null,
+) => {
+    if (element.tag === 'input') {
+        attributes.forEach((attr) => {
+            if (attr.type === parvinConfig.templateModelBindingSyntax) {
+                if (state) {
+                    if (attr.name) {
+                        element.addEvent(
+                            'input',
+                            // @ts-ignore
+                            (e) => (state.state[attr.name] = e.target.value),
+                        )
+                    }
+                }
+            }
+        })
+    }
 }
 
 export { parser, elementParser }
