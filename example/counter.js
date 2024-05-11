@@ -29,6 +29,19 @@ const CounterComponent = Parvin.createComponent(
                     <button type="button" $click="addItem" class="btn btn-primary">Add item</button>
                 </div>
             </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <p class="card-text">Boolean thing</p>
+                    <p> condition: $$condition </p>
+                    <div $if="condition" class="alert alert-warning" role="alert">
+                        Condition is false
+                    </div>
+                    <!-- <div class="alert alert-info" role="alert">
+                        Condition is true
+                    </div> --->
+                    <button type="button" $click="toggle" class="btn btn-primary">Toggle</button>
+                </div>
+            </div>
         </div>
      </template>
      <script>
@@ -41,7 +54,8 @@ const CounterComponent = Parvin.createComponent(
                         lastName: "parvin ghods"
                     }
                 },
-                items:[]
+                items:[],
+                condition: false
             },
             methods:{
                 increment: function(){
@@ -60,6 +74,9 @@ const CounterComponent = Parvin.createComponent(
                 },
                 addItem: function(){
                     this.state.items.push("item")
+                },
+                toggle: function(){
+                    this.state.condition = !this.state.condition
                 }
             },
             onCreated: function(){

@@ -106,7 +106,11 @@ class Component extends Element {
                 this.state ? this.state.state : {},
             )
 
-            const elements = elementParser(renderedStates, this.globalObject)
+            const elements = elementParser(
+                renderedStates,
+                this.globalObject,
+                this.state,
+            )
 
             if (elements) {
                 this.DOMElement.appendChild(elements.render())

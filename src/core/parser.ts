@@ -2,6 +2,7 @@ import parvinConfig from './configs/general'
 import { createElement, Element } from './element'
 import type IParser from './interfaces/IParser'
 import type IScript from './interfaces/IScript'
+import type { State } from './state'
 import { getDomElementsAttributes } from './utils/dom'
 
 const parser = (data: string): IParser => {
@@ -49,41 +50,11 @@ const parser = (data: string): IParser => {
     }
 }
 
-const setEvents = (
-    element: Element,
-    events: Record<string, string | null>[],
+const elementParser = (
+    template: string,
     methods: Object | undefined,
+    state: State | null,
 ) => {
-    events.forEach((event) => {
-        // @ts-ignore
-        if (!methods[event.eventFunction]) {
-            console.error(`'${event.eventFunction}' function not declared`)
-        }
-
-        // @ts-ignore
-        element.addEvent(event.eventName, () => methods[event.eventFunction]())
-    })
-}
-
-const eventParser = (
-    node: HTMLElement,
-    element: Element,
-    methods: Object | undefined,
-) => {
-    const events: Record<string, string | null>[] = []
-    // console.log(node)
-    node.getAttributeNames().forEach((event) => {
-        if (event.startsWith(parvinConfig.templateEventSyntax)) {
-            events.push({
-                eventName: event.replace(parvinConfig.templateEventSyntax, ''),
-                eventFunction: node.getAttribute(event),
-            })
-        }
-    })
-    setEvents(element, events, methods)
-}
-
-const elementParser = (template: string, methods: Object | undefined) => {
     try {
         const parser = new DOMParser()
         const doc = parser.parseFromString(template, 'text/html')
@@ -123,7 +94,7 @@ const elementParser = (template: string, methods: Object | undefined) => {
                         [],
                     )
 
-                    eventParser(childNode, element, methods)
+                    templateEngineParser(childNode, element, methods, state)
 
                     parentElement.appendChild(element)
                     // instanceof Text
@@ -151,7 +122,7 @@ const elementParser = (template: string, methods: Object | undefined) => {
                 [],
             )
 
-            eventParser(rootElement, element, methods)
+            templateEngineParser(rootElement, element, methods, state)
 
             // @ts-ignore
             for (const cn of rootElement.childNodes) {
@@ -168,6 +139,108 @@ const elementParser = (template: string, methods: Object | undefined) => {
         console.error(error)
     }
     return null
+}
+
+const templateEngineParser = (
+    node: HTMLElement,
+    element: Element,
+    methods: Object | undefined,
+    state: State | null,
+) => {
+    const events = getElementEvents(node)
+
+    // Handle elements events
+    setEvents(element, events, methods)
+
+    // Handle elements conditonal renderings
+    // checkConditionalRenders(element, events, methods, state)
+}
+
+const getElementEvents = (node: HTMLElement) => {
+    const events: Record<string, string | null>[] = []
+    const conditions = getConditions()
+
+    // console.log(node)
+    node.getAttributeNames().forEach((event) => {
+        if (event.startsWith(parvinConfig.templateEventSyntax)) {
+            const eventType = event.replace(
+                parvinConfig.templateEventSyntax,
+                '',
+            )
+
+            if (conditions.indexOf(eventType) === -1) {
+                events.push({
+                    type: eventType,
+                    name: node.getAttribute(event),
+                })
+            }
+        }
+    })
+
+    return events
+}
+
+const setEvents = (
+    element: Element,
+    events: Record<string, string | null>[],
+    methods: Object | undefined,
+) => {
+    events.forEach((event) => {
+        // @ts-ignore
+        if (!methods[event.name]) {
+            console.error(`'${event.name}' function not declared`)
+        }
+
+        // @ts-ignore
+        element.addEvent(event.type, () => methods[event.name]())
+    })
+}
+
+const checkConditionalRenders = (
+    element: Element,
+    attributes: Record<string, string | null>[],
+    methods: Object | undefined,
+    state: State | null,
+) => {
+    const conditions = getConditions()
+
+    // Check if it has any attributes
+    if (attributes.length) {
+        // Check each attribute
+        attributes.forEach((attr) => {
+            // Check attribute type
+            if (attr.type) {
+                // Check if attribute is conditional attribute
+                if (conditions.indexOf(attr.type) >= 0) {
+                    // Check if we have state
+                    if (state) {
+                        // Check if attribute type is type of "IF"
+                        if (attr.type === parvinConfig.ifConditionName) {
+                            // Check if we got attribute value
+                            if (attr.name) {
+                                const data = state.state[attr.name]
+
+                                if (data) {
+                                    element.condition = data
+                                } else {
+                                    console.error(`${attr.name} is undefined`)
+                                    element.condition = false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+}
+
+const getConditions = () => {
+    return [
+        parvinConfig.ifConditionName,
+        parvinConfig.elseIfConditionName,
+        parvinConfig.elseConditionName,
+    ]
 }
 
 export { parser, elementParser }

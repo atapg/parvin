@@ -11,6 +11,8 @@ class Element {
     declare DOMElement: HTMLElement
     element: Element
     events: IElementEvents[] = []
+    show: boolean = true
+    condition: boolean = true
 
     constructor(
         tag: keyof HTMLElementTagNameMap,

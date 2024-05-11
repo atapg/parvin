@@ -23,6 +23,8 @@ class State {
         target[property] = newValue
 
         this.component.onStateUpdate(oldValue, newValue, property)
+
+        return true
     }
 
     get(target: any, property: any, newValue: any, receiver: any) {
