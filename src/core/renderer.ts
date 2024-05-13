@@ -39,6 +39,37 @@ function renderTemplateStates(template: string, data: Record<string, any>) {
     )
 }
 
+function renderTemplateWithSpecificState(
+    template: string,
+    data: Record<string, any>,
+    stateName: string,
+) {
+    return template.replace(
+        parvinConfig.templateVariableSyntaxRegex,
+        (v, key) => {
+            // console.log(key === stateName, { key, stateName })
+            const keys = key.split('.')
+
+            let nestedData: any = data
+
+            for (const key of keys) {
+                if (nestedData.hasOwnProperty(key)) {
+                    nestedData = nestedData[key]
+                } else {
+                    nestedData = null
+                    break
+                }
+            }
+
+            if (typeof nestedData === 'object') {
+                nestedData = JSON.stringify(nestedData)
+            }
+
+            return nestedData
+        },
+    )
+}
+
 function renderTemplateEvents(template: string, methods: Object | undefined) {
     const events: any = {}
 
@@ -55,4 +86,10 @@ function renderElements(template: string, methods: Object | undefined) {
     //
 }
 
-export { render, renderTemplateStates, renderTemplateEvents, renderElements }
+export {
+    render,
+    renderTemplateStates,
+    renderTemplateEvents,
+    renderElements,
+    renderTemplateWithSpecificState,
+}

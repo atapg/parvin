@@ -1,7 +1,10 @@
 import { Element } from './element'
 import type IGlobalObject from './interfaces/IGlobalObject'
 import { elementParser, parser } from './parser'
-import { renderTemplateStates } from './renderer'
+import {
+    renderTemplateStates,
+    renderTemplateWithSpecificState,
+} from './renderer'
 import { State } from './state'
 
 class Component extends Element {
@@ -38,7 +41,12 @@ class Component extends Element {
         this.globalObject = { ...this.methods, ...this.state }
     }
 
-    onStateUpdate(oldValue: any, newValue: any, property: any) {
+    onStateUpdate(
+        oldValue: any,
+        newValue: any,
+        property: any,
+        stateProperty: string,
+    ) {
         if (this.state) {
             // @ts-ignore
             if (this.watchers[property]) {
@@ -50,7 +58,7 @@ class Component extends Element {
                     property,
                 )
             }
-
+            this.rerenderElement(stateProperty)
             this.rerender()
         }
     }
@@ -80,7 +88,36 @@ class Component extends Element {
         }
     }
 
+    rerenderElement(elementState: string) {
+        console.log(elementState)
+        // const template = parser()
+        const temp = renderTemplateWithSpecificState(
+            this.template,
+            this.state ? this.state.state : {},
+            elementState,
+        )
+
+        // console.log(temp)
+    }
+
     rerender() {
+        // if (this.template) {
+        //     const renderedStates = renderTemplateStates(
+        //         this.template,
+        //         this.state ? this.state.state : {},
+        //     )
+
+        //     const elements = elementParser(
+        //         renderedStates,
+        //         this.globalObject,
+        //         this.state,
+        //     )
+
+        //     if (elements) {
+        //         // this.ComponentDOMElement.appendChild(elements.render())
+        //         // this.ComponentDOMElement.children= []
+        //     }
+        // }
         super.rerender()
         this.onUpdated()
     }

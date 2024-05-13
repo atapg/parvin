@@ -45,13 +45,13 @@ const CounterComponent = Parvin.createComponent(
                     <button type="button" $click="toggle" class="btn btn-primary">Toggle</button>
                 </div>
             </div>
-            <!-- <div class="card" style="width: 18rem;">
+            <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <p class="card-text">Input</p>
                     <p> input: $$input </p>
                     <input type="text" $model="input" />
                 </div>
-            </div> --->
+            </div>
         </div>
      </template>
      <script>
